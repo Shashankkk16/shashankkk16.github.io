@@ -249,7 +249,7 @@ function date(){
       return current_date;
 }
 
-function show(){
+/*function show(){
   firebase.database().ref("/"+room+"/").on('value',(snap)=>{
     var totalRecord =  snap.numChildren();
     id = totalRecord;
@@ -314,7 +314,58 @@ function show(){
                   document.querySelector(".chat").appendChild(el);
                   let hit = document.querySelector(".chat").scrollHeight;
                   document.querySelector(".chat").scrollTop = hit;
-})}})}
+})}})}*/
+
+function show() {
+    firebase.database().ref("/" + room + "/").on('value', (snap) => {
+        id = snap.numChildren();
+        let e = document.querySelector(".chat");
+        e.innerHTML = "";
+
+        snap.forEach((childSnap) => {
+            const data = childSnap.val();
+            var el = document.createElement("div");
+            var he = document.createElement("h3");
+            var mes = document.createElement("h3");
+            var tme = document.createElement("h3");
+
+            mes.id = "mess";
+            tme.id = "tme";
+
+            let str = data.message;
+
+            str = str.replace(/\n/g, "<br>");
+            str = str.replace(/\*(.*?)\*/g, '<span class="msg-bold">$1</span>');
+            str = str.replace(/_(.*?)_/g, '<span class="msg-italic">$1</span>');
+            str = str.replace(/\|(.*?)\|/g, '<span class="msg-fantasy">$1</span>');
+            str = str.replace(/%(.*?)%/g, '<span class="msg-cursive">$1</span>');
+
+            str = str.replace(/#(\d)([^#\s\*_|%]+)/g, (match, num, word) => {
+                let hex = col[num] || "#6709ab";
+                return `<span style="color: ${hex}">${word}</span>`;
+            });
+
+            if (data.name == localName) {
+                el.id = "pxt";
+                he.id = "name-c";
+            } else {
+                el.id = "txt";
+                he.id = "name-m";
+            }
+
+            he.innerHTML = data.name;
+            mes.innerHTML = str;
+            tme.innerHTML = data.time;
+
+            el.appendChild(he);
+            el.appendChild(mes);
+            el.appendChild(tme);
+            e.appendChild(el);
+            
+            e.scrollTop = e.scrollHeight;
+        });
+    });
+}
 
 show()
 
