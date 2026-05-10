@@ -249,73 +249,6 @@ function date(){
       return current_date;
 }
 
-/*function show(){
-  firebase.database().ref("/"+room+"/").on('value',(snap)=>{
-    var totalRecord =  snap.numChildren();
-    id = totalRecord;
-    let e = document.querySelector(".chat");
-    e.innerHTML = "";
-
-    for (let i=1 ; i<id+1;i++){
-            firebase.database().ref().child("/"+room).child(i).get().then((snapshot) => {
-                  var el = document.createElement("div");
-                  var he = document.createElement("h3");
-                  var mes = document.createElement("h3");
-                  var tme = document.createElement("h3");
-
-                  mes.id = "mess"
-                  tme.id = "tme"
-                  
-                  var messages = snapshot.val()['message'];
-                  var message = messages.replace("\n" , "<br>");
-                  for (let i=0 ; i<8 ; i++){
-                  if (message.startsWith("*")){
-                        mes.style.fontWeight = "1000";
-                        message = message.substring(1);
-                  }
-                  if (message.startsWith("_")){
-                        mes.style.fontStyle = "italic";
-                        message = message.substring(1);
-                  }
-                  if (message.startsWith("|")){
-                        mes.style.fontFamily = "fantasy";
-                        message = message.substring(1);
-                  }
-                  if (message.startsWith("%")){
-                        mes.style.fontFamily = "cursive";
-                        message = message.substring(1);
-                  }
-                  if (message.startsWith("#")){
-                        var cx = message.slice(1,2);
-                        if (cx in col){
-                              mes.style.color = col[cx];
-                        }
-                        else{
-                              mes.style.color = "#6709ab";
-                        }
-                        message = message.substring(2);
-                  }
-                  }
-                  if (snapshot.val()['name'] == localName){
-                        el.id = "pxt";
-                        he.id = "name-c";
-                  }
-
-                  else{
-                       el.id = "txt";
-                       he.id = "name-m";
-                  }
-                  he.innerHTML = snapshot.val()['name'];
-                  mes.innerHTML = message;
-                  tme.innerHTML = snapshot.val()['time'];
-                  el.appendChild(he);
-                  el.appendChild(mes);
-                  el.appendChild(tme);
-                  document.querySelector(".chat").appendChild(el);
-                  let hit = document.querySelector(".chat").scrollHeight;
-                  document.querySelector(".chat").scrollTop = hit;
-})}})}*/
-
 function show() {
     firebase.database().ref("/" + room + "/").on('value', (snap) => {
         id = snap.numChildren();
@@ -429,19 +362,6 @@ function send(){
 }
 
 var lft = true;
-
-/*document.querySelector(".top").addEventListener("click" , () => {
-      if (lft){
-            document.querySelector(".top").style.width = "550px";
-            document.querySelector(".op").innerHTML = "<";
-            lft = false
-      }
-      else{
-            document.querySelector(".op").innerHTML = ">";
-            document.querySelector(".top").style.width = "50px";
-            lft = true
-      }
-})*/
 
 document.querySelector(".send").addEventListener("click" , send)
 
