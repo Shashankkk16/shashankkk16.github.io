@@ -290,7 +290,7 @@ var col = {
   var pa = 0;
   let id = 1;
   let name = "";
-  let localName = localStorage.getItem("eman");
+  let localName = "user_" + Math.floor(10000000 + Math.random() * 90000000);;
 
 function time(){
         var date = new Date();
@@ -390,18 +390,6 @@ function alrt(txt,col){
       setInterval(() => {
             document.querySelector(".alrt").style.top = "-300px";
       } , 4000)
-}
-
-function ask(){
-      var login = localStorage.getItem("eman");
-
-      if (login==null){
-           alert("Sign in First");
-           window.open("https://shashankkk16.github.io/chat/login.html","_self");
-      }
-      else{
-           name = login;
-      }
 }
 
 document.addEventListener("load",ask())
