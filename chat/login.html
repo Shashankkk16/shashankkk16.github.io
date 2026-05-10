@@ -1,69 +1,156 @@
-<style>
-      input {
-            width: 90%;
-            margin: 5%;
-            font-size: 70;
-            padding: 10 20;
-            border-radius: 20px;
-            border: 3px solid #000045;
-            font-weight: 500;
-            outline: none;
-      }
-      button {
-            width: auto;
-            font-size: 70;
-            font-weight: 500;
-            background: #000045;
-            color: white;
-            border-radius: 20px;
-            margin-left: 35%;
-            padding: 10;
-      }
-      form {
-            padding: 25;
-            margin: 500 10;
-            border-radius: 25px;
-            box-shadow: 10px 10px 50px 0px black;
-      }
-</style>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-      <title>Register</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        :root {
+            --primary-bg: #000045;
+            --accent-color: #4f46e5;
+            --text-light: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000022 0%, #000045 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #sheetdb-form {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            box-sizing: border-box;
+        }
+
+        h2 {
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            border-color: var(--accent-color);
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        button:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #333;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 480px) {
+            #sheetdb-form {
+                padding: 25px;
+            }
+            h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
 </head>
+<body>
+
 <form action="https://sheetdb.io/api/v1/ciman6lqr2fhs" method="POST" id="sheetdb-form">
-  <input name="data[Name]" id="name" placeholder="Enter your Name here...">
-  <input name="data[Email]" id="email" placeholder="Enter your Email here...">
-  <button class="but" type="submit">Sign In</button>
+    <h2>Welcome</h2>
+    <input name="data[Name]" id="name" type="text" placeholder="Full Name" required>
+    <input name="data[Email]" id="email" type="email" placeholder="Email Address" required>
+    <button class="but" type="submit">Sign In</button>
 </form>
-<script type="text/javascript"
-        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
-</script>
-<script type="text/javascript">
-   (function(){
-      emailjs.init('z0OOVxgH4GyChI-XP');
-   })();
-</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script>
-  var form = document.getElementById('sheetdb-form');
-  form.addEventListener("submit", e => {
-    e.preventDefault();
-    fetch(form.action, {
-        method : "POST",
-        body: new FormData(document.getElementById("sheetdb-form")),
-    }).then(
-        response => response.json()
-    ).then((html) => {
-          document.querySelector(".but").disabled = "true";
-          var name = document.querySelector('#name').value;
-          var params = {
-               mail: document.querySelector("#email").value,
-               name: document.querySelector("#name").value
-};
-          emailjs.send("service_svlwc2y","template_rjc11bc",params);
-          localStorage.setItem("eman",name);
-          alert("Sign In Successful");
-          localStorage.setItem("eman",name);
-          window.open("https://shashankkk16.github.io/chat","_self");
+    (function(){
+        emailjs.init('z0OOVxgH4GyChI-XP');
+    })();
+
+    var form = document.getElementById('sheetdb-form');
+    form.addEventListener("submit", e => {
+        e.preventDefault();
+        const btn = document.querySelector(".but");
+        btn.textContent = "Processing...";
+        btn.disabled = true;
+
+        fetch(form.action, {
+            method : "POST",
+            body: new FormData(form),
+        })
+        .then(response => response.json())
+        .then((data) => {
+            var nameValue = document.querySelector('#name').value;
+            var emailValue = document.querySelector("#email").value;
+            
+            var params = {
+                mail: emailValue,
+                name: nameValue
+            };
+
+            emailjs.send("service_svlwc2y","template_rjc11bc", params)
+                .then(() => {
+                    localStorage.setItem("eman", nameValue);
+                    alert("Sign In Successful!");
+                    window.open("https://shashankkk16.github.io/chat", "_self");
+                });
+        })
+        .catch(err => {
+            alert("Something went wrong. Please try again.");
+            btn.disabled = false;
+            btn.textContent = "Sign In";
+        });
     });
-  });
 </script>
+
+</body>
+</html>
