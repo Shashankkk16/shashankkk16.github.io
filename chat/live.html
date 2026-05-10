@@ -283,12 +283,6 @@ function show(){
                        el.id = "txt";
                        he.id = "name-m";
                   }
-                  if (snapshot.val()['name'] == "Shashank"){
-                        he.id = "name-s";
-                  }
-                  if (snapshot.val()['name'] == "Ishant"){
-                        he.id = "name-i";
-                  }
                   he.innerHTML = snapshot.val()['name'];
                   mes.innerHTML = message;
                   tme.innerHTML = snapshot.val()['time'];
@@ -310,8 +304,6 @@ function alrt(txt,col){
             document.querySelector(".alrt").style.top = "-300px";
       } , 4000)
 }
-
-document.addEventListener("load",ask())
 
 function send(){
       let data = {};
