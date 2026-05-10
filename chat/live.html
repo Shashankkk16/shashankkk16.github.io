@@ -177,7 +177,14 @@
     color: #888;
     cursor: text;
 }
+
+    /* Styling for the highlighted parts in the input */
+.hl-bold { font-weight: bold; color: #fff; }
+.hl-italic { font-style: italic; color: #fff; }
+.hl-color { font-weight: bold; } /* Color will be set via inline style */
+.hl-font { font-family: cursive; color: #80deea; }
 </style>
+
 <head><title>Live-Chat</title></head>
 <body>
 <div class="body">
@@ -322,35 +329,31 @@ function alrt(txt,col){
 
 const inputField = document.querySelector(".message");
 
-inputField.addEventListener("input", () => {
+function setEndOfContenteditable(contentEditableElement) {
+    let range = document.createRange();
+    range.selectNodeContents(contentEditableElement);
+    range.collapse(false);
+    let selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+}
+
+inputField.addEventListener("input", (e) => {
     let text = inputField.innerText;
-    let styledText = text;
+    let highlighted = text.replace(/\*(.*?)\*/g, '<span class="hl-bold">*$1*</span>');
 
-    // Apply Bold: *text
-    if (styledText.startsWith("*")) {
-        inputField.style.fontWeight = "1000";
-    } else { inputField.style.fontWeight = "normal"; }
-
-    // Apply Italic: _text
-    if (styledText.startsWith("_")) {
-        inputField.style.fontStyle = "italic";
-    } else { inputField.style.fontStyle = "normal"; }
-
-    // Apply Color logic: #3Text
-    const colorMatch = styledText.match(/^#(\d)/);
-    if (colorMatch) {
-        let colorKey = colorMatch[1];
-        inputField.style.color = col[colorKey] || "#6709ab";
-    } else {
-        inputField.style.color = "white"; // Default
-    }
+    highlighted = highlighted.replace(/_(.*?)_/g, '<span class="hl-italic">_$1_</span>');
     
-    // Apply Font Families
-    if (styledText.startsWith("|")) { inputField.style.fontFamily = "fantasy"; }
-    else if (styledText.startsWith("%")) { inputField.style.fontFamily = "cursive"; }
-    else { inputField.style.fontFamily = "inherit"; }
-});
+    highlighted = highlighted.replace(/#(\d)(\w+)/g, (match, num, word) => {
+        let hex = col[num] || "#6709ab";
+        return `<span style="color: ${hex}">#${num}${word}</span>`;
+    });
 
+    if (inputField.innerHTML !== highlighted) {
+        inputField.innerHTML = highlighted;
+        setEndOfContenteditable(inputField);
+    }
+});
 function send(){
       let data = {};
       let msg = document.querySelector(".message").innerText;
