@@ -162,6 +162,21 @@
         border-radius: 10px;
         margin-top: 5px;
     }
+
+    .message {
+    min-height: 45px;
+    height: auto !important;
+    max-height: 150px;
+    overflow-y: auto;
+    white-space: pre-wrap; /* Preserves spaces/newlines */
+}
+
+/* Placeholder logic for contenteditable */
+.message:empty:before {
+    content: attr(data-placeholder);
+    color: #888;
+    cursor: text;
+}
 </style>
 <head><title>Live-Chat</title></head>
 <body>
@@ -171,8 +186,8 @@
 <div id="txt"><h3 id="name-c">Website</h3><h3 id="mess">Messages are loading.....</h3></div>
 </div>
 <div class="mes">
-<textarea class="message" placeholder="Enter your message.."></textarea>
-<button class="send"><img src="https://imgs.search.brave.com/Zf90jNglxnjLuCw8f7dGu5BjB2iu_eCysbR2eq1WL7c/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMjIw/NDUyMTUzMi92ZWN0/b3Ivc2VuZC1nbHlw/aC1zb2xpZC1pY29u/LXNvbGlkLWljb24t/dGhhdC1jYW4tYmUt/YXBwbGllZC1hbnl3/aGVyZS1zaW1wbGUt/cGl4ZWwtcGVyZmVj/dC1hbmQuanBnP3M9/NjEyeDYxMiZ3PTAm/az0yMCZjPWotWGxY/X0VrVHBtWlNRNzlX/RUNfdkVQY3NTQWVJ/X0EzbHZISWhUSDN6/ZzA9"/></button>
+    <div class="message" contenteditable="true" data-placeholder="Enter your message.."></div>
+    <button class="send"><img src="https://imgs.search.brave.com/Zf90jNglxnjLuCw8f7dGu5BjB2iu_eCysbR2eq1WL7c/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMjIw/NDUyMTUzMi92ZWN0/b3Ivc2VuZC1nbHlw/aC1zb2xpZC1pY29u/LXNvbGlkLWljb24t/dGhhdC1jYW4tYmUt/YXBwbGllZC1hbnl3/aGVyZS1zaW1wbGUt/cGl4ZWwtcGVyZmVj/dC1hbmQuanBnP3M9/NjEyeDYxMiZ3PTAm/az0yMCZjPWotWGxY/X0VrVHBtWlNRNzlX/RUNfdkVQY3NTQWVJ/X0EzbHZISWhUSDN6/ZzA9"/></button>
 </div>
 </div>
 </body>
@@ -305,9 +320,40 @@ function alrt(txt,col){
       } , 4000)
 }
 
+const inputField = document.querySelector(".message");
+
+inputField.addEventListener("input", () => {
+    let text = inputField.innerText;
+    let styledText = text;
+
+    // Apply Bold: *text
+    if (styledText.startsWith("*")) {
+        inputField.style.fontWeight = "1000";
+    } else { inputField.style.fontWeight = "normal"; }
+
+    // Apply Italic: _text
+    if (styledText.startsWith("_")) {
+        inputField.style.fontStyle = "italic";
+    } else { inputField.style.fontStyle = "normal"; }
+
+    // Apply Color logic: #3Text
+    const colorMatch = styledText.match(/^#(\d)/);
+    if (colorMatch) {
+        let colorKey = colorMatch[1];
+        inputField.style.color = col[colorKey] || "#6709ab";
+    } else {
+        inputField.style.color = "white"; // Default
+    }
+    
+    // Apply Font Families
+    if (styledText.startsWith("|")) { inputField.style.fontFamily = "fantasy"; }
+    else if (styledText.startsWith("%")) { inputField.style.fontFamily = "cursive"; }
+    else { inputField.style.fontFamily = "inherit"; }
+});
+
 function send(){
       let data = {};
-      let msg = document.querySelector(".message").value;
+      let msg = document.querySelector(".message").innerText;
       if (msg == ""){
             alrt("Enter Message.","rgb(255,70,0)")
       }
